@@ -1,83 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= place ?>の落とし物一覧</title>
-
+  <title>近畿大学工業高等専門学校 落とし物マップ</title>
   <style>
-    body { font-family: sans-serif; margin: 20px; background-color: #f8f8f8; }
-    h2 { color: #333; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
-    table { border-collapse: collapse; width: 90%; margin: 20px auto; background-color: #fff; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      text-align: center;
+    }
+
+    h2 { margin: 20px 0; }
+
+    /* ====== 地図コンテナ ====== */
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      margin: 40px auto;
+    }
+
+    /* ====== 地図画像 ====== */
+    .map-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+    }
+
+    /* ====== 共通ラベル ====== */
+    .label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #222;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .label:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: #fffa9e;
+    }
+
+    /* ====== 各建物位置 ====== */
+    .honkan       { top: 21%; left: 17%; }
+    .toshokan     { top: 16%; left: 28%; }
+    .daikyoshitsu { top: 15%; left: 35%; }
+    .building1    { top: 20%; left: 36%; }
+    .ground       { top: 51%; left: 7%; }
+    .parking      { top: 50%; left: 20%; }
+    .tennis       { top: 67%; left: 15%; }
+    .cafeteria    { top: 85%; left: 36%; }
+    .building2    { top: 56%; left: 71%; }
+    .building3    { top: 46%; left: 73%; }
+    .building4    { top: 12%; left: 81%; }
+    .gym          { top: 56%; left: 90%; }
+    .budokan      { top: 61%; left: 97%; }
+    .room-middle  { top: 39%; left: 90%; }
+    .groundsoil   { top: 86%; left: 53%; }
+
+    /* ====== 落とし物テーブル ====== */
+    #lostItemsContainer {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto 40px auto;
+      text-align: left;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
     th { background-color: #eef; }
-    img { max-height: 120px; border-radius: 4px; }
-    .no-items { text-align: center; margin-top: 30px; color: gray; }
-    #loading { text-align: center; margin-top: 40px; font-size: 1.2em; color: #007bff; }
+    img.lost-photo {
+      max-height: 120px;
+      border-radius: 4px;
+    }
+    .no-items {
+      color: gray;
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+
+    @media (max-width: 600px) {
+      .label { font-size: 10px; padding: 2px 5px; }
+    }
   </style>
 </head>
 <body>
 
-  <h2><?= place ?> の落とし物一覧</h2>
+<h2>近畿大学工業高等専門学校</h2>
 
-  <div id="loading">読み込み中...</div>
-  <div id="lostItemsContainer"></div>
+<div class="map-container">
+  <img src="https://lh3.googleusercontent.com/d/1P7-t5EV9v3r-_l6U7d9zLfD1qSjiC81e" alt="学校マップ" class="map-image">
 
-  <script>
-    const place = '<?= place ?>';
+  <!-- 全校舎リンク -->
+  <a class="label honkan" onclick="showLostItems('本館')">本館</a>
+  <a class="label toshokan" onclick="showLostItems('図書館')">図書館</a>
+  <a class="label daikyoshitsu" onclick="showLostItems('大教室')">大教室</a>
+  <a class="label building1" onclick="showLostItems('1号館')">1号館</a>
+  <a class="label ground" onclick="showLostItems('グラウンド')">グラウンド</a>
+  <a class="label parking" onclick="showLostItems('駐車場')">駐車場</a>
+  <a class="label tennis" onclick="showLostItems('テニスコート')">テニスコート</a>
+  <a class="label cafeteria" onclick="showLostItems('食堂')">食堂</a>
+  <a class="label building2" onclick="showLostItems('2号館')">2号館</a>
+  <a class="label building3" onclick="showLostItems('3号館')">3号館</a>
+  <a class="label building4" onclick="showLostItems('4号館')">4号館</a>
+  <a class="label gym" onclick="showLostItems('体育館')">体育館</a>
+  <a class="label budokan" onclick="showLostItems('武道館')">武道館</a>
+  <a class="label room-middle" onclick="showLostItems('部室')">部室</a>
+  <a class="label groundsoil" onclick="showLostItems('グラウンド(土)')">グラウンド(土)</a>
+</div>
 
-    // ✅ データ読込
-    function loadLostItems() {
-      google.script.run
-        .withSuccessHandler(displayLostItems)
-        .withFailureHandler(handleError)
-        .getLostItemsByLocation(place);
-    }
+<div id="lostItemsContainer"></div>
 
-    // ✅ 表示処理
-    function displayLostItems(items) {
-      document.getElementById("loading").style.display = "none";
+<script>
+function showLostItems(place){
+  const container = document.getElementById('lostItemsContainer');
+  container.innerHTML = '<div>読み込み中...</div>';
 
-      if (items.length === 0) {
-        document.getElementById("lostItemsContainer").innerHTML =
-          `<div class="no-items">この場所の落とし物はありません。</div>`;
-        return;
-      }
+  google.script.run
+    .withSuccessHandler(function(items){
+      displayLostItems(items, place);
+    })
+    .withFailureHandler(function(err){
+      container.innerHTML = '<div>エラーが発生しました</div>';
+      console.error(err);
+    })
+    .getLostItemsByLocation(place);
+}
 
-      let html = `
-        <table>
-          <tr>
-            <th>日時</th>
-            <th>落とし物</th>
-            <th>写真</th>
-          </tr>
-      `;
+function displayLostItems(items, place){
+  const container = document.getElementById('lostItemsContainer');
+  let html = `<h3>${place}の落とし物一覧</h3>`;
 
-      items.forEach(item => {
-        const imgHtml = item.base64img
-          ? `<img src="${item.base64img}">`
-          : 'なし';
+  if(items.length === 0){
+    html += '<div class="no-items">この場所の落とし物はありません</div>';
+  } else {
+    html += `<table>
+      <tr><th>日時</th><th>落とし物</th><th>写真</th></tr>`;
+    items.forEach(item => {
+      const imgHtml = item.photo ? `<img class="lost-photo" src="${item.photo}">` : 'なし';
+      html += `<tr>
+        <td>${item.timestamp}</td>
+        <td>${item.item}</td>
+        <td style="text-align:center;">${imgHtml}</td>
+      </tr>`;
+    });
+    html += '</table>';
+  }
 
-        html += `
-          <tr>
-            <td>${item.timestamp}</td>
-            <td>${item.item}</td>
-            <td>${imgHtml}</td>
-          </tr>`;
-      });
-
-      html += "</table>";
-
-      document.getElementById("lostItemsContainer").innerHTML = html;
-    }
-
-    function handleError(e) {
-      document.getElementById("loading").innerText =
-        "エラーが発生しました。";
-    }
-
-    window.onload = loadLostItems;
-  </script>
+  container.innerHTML = html;
+}
+</script>
 
 </body>
 </html>
