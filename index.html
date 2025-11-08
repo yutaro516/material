@@ -5,31 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= place ?>の落とし物一覧</title>
 
-
   <style>
     body { font-family: sans-serif; margin: 20px; background-color: #f8f8f8; }
     h2 { color: #333; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
     table { border-collapse: collapse; width: 90%; margin: 20px auto; background-color: #fff; }
     th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
     th { background-color: #eef; }
-    .no-items { text-align: center; color: gray; margin-top: 30px; padding: 20px; background: #fff; }
-    #loading { text-align: center; margin-top: 50px; font-size: 1.2em; color: #007bff; }
+    img { max-height: 120px; border-radius: 4px; }
+    .no-items { text-align: center; margin-top: 30px; color: gray; }
+    #loading { text-align: center; margin-top: 40px; font-size: 1.2em; color: #007bff; }
   </style>
 </head>
 <body>
 
+  <h2><?= place ?> の落とし物一覧</h2>
 
-  <h2><?= place ?> で発見された落とし物一覧</h2>
-
-
-  <div id="loading">データを読み込み中...</div>
+  <div id="loading">読み込み中...</div>
   <div id="lostItemsContainer"></div>
-
 
   <script>
     const place = '<?= place ?>';
 
-
+    // ✅ データ読込
     function loadLostItems() {
       google.script.run
         .withSuccessHandler(displayLostItems)
@@ -37,19 +34,15 @@
         .getLostItemsByLocation(place);
     }
 
-
+    // ✅ 表示処理
     function displayLostItems(items) {
-
-
       document.getElementById("loading").style.display = "none";
-
 
       if (items.length === 0) {
         document.getElementById("lostItemsContainer").innerHTML =
-          `<div class="no-items">この場所の落とし物はありません</div>`;
+          `<div class="no-items">この場所の落とし物はありません。</div>`;
         return;
       }
-
 
       let html = `
         <table>
@@ -60,40 +53,31 @@
           </tr>
       `;
 
-
       items.forEach(item => {
-
-
-        const photo =
-          item.photoLink
-            ? `<a href="${item.photoLink}" target="_blank">写真を見る</a>`
-            : 'なし';
-
+        const imgHtml = item.base64img
+          ? `<img src="${item.base64img}">`
+          : 'なし';
 
         html += `
           <tr>
             <td>${item.timestamp}</td>
             <td>${item.item}</td>
-            <td>${photo}</td>
-          </tr>
-        `;
+            <td>${imgHtml}</td>
+          </tr>`;
       });
 
+      html += "</table>";
 
-      html += `</table>`;
       document.getElementById("lostItemsContainer").innerHTML = html;
     }
 
-
-    function handleError(error) {
+    function handleError(e) {
       document.getElementById("loading").innerText =
-        "データ読み込み中にエラーが発生しました。";
+        "エラーが発生しました。";
     }
-
 
     window.onload = loadLostItems;
   </script>
-
 
 </body>
 </html>
