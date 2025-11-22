@@ -58,7 +58,7 @@
     .toshokan     { top: 16%; left: 28%; }
     .daikyoshitsu { top: 15%; left: 35%; }
     .building1    { top: 20%; left: 36%; }
-    .ground       { top: 51%; left: 7%; }
+    .groundsoil   { top: 51%; left: 5%; }
     .parking      { top: 50%; left: 20%; }
     .tennis       { top: 67%; left: 15%; }
     .cafeteria    { top: 85%; left: 36%; }
@@ -68,7 +68,7 @@
     .gym          { top: 56%; left: 90%; }
     .budokan      { top: 61%; left: 97%; }
     .room-middle  { top: 39%; left: 90%; }
-    .groundsoil   { top: 86%; left: 53%; }
+    .ground       { top: 86%; left: 53%; }
 
     /* ====== 落とし物テーブル ====== */
     #lostItemsContainer {
@@ -97,9 +97,43 @@
       font-size: 1.1em;
     }
 
+    /* ====== Googleフォームボタン（四角い枠） ====== */
+    .form-links {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 100;
+      background-color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      border: 2px solid #ddd;
+    }
+
+    .form-btn {
+      background: #ffb400;
+      color: #222;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+    }
+    .form-btn:hover {
+      background: #ffc94d;
+      transform: translateY(-2px);
+    }
+
+    /* ====== スマホ対応 ====== */
     @media (max-width: 600px) {
       .label { font-size: 10px; padding: 2px 5px; }
+      .form-links { flex-direction: column; gap: 10px; }
     }
+
   </style>
 </head>
 <body>
@@ -109,12 +143,12 @@
 <div class="map-container">
   <img src="https://lh3.googleusercontent.com/d/1P7-t5EV9v3r-_l6U7d9zLfD1qSjiC81e" alt="学校マップ" class="map-image">
 
-  <!-- 全校舎リンク -->
+  <!-- 校舎リンク -->
   <a class="label honkan" onclick="showLostItems('本館')">本館</a>
   <a class="label toshokan" onclick="showLostItems('図書館')">図書館</a>
   <a class="label daikyoshitsu" onclick="showLostItems('大教室')">大教室</a>
   <a class="label building1" onclick="showLostItems('1号館')">1号館</a>
-  <a class="label ground" onclick="showLostItems('グラウンド')">グラウンド</a>
+  <a class="label ground" onclick="showLostItems('グラウンド(食堂付近)')">グラウンド(食堂付近)</a>
   <a class="label parking" onclick="showLostItems('駐車場')">駐車場</a>
   <a class="label tennis" onclick="showLostItems('テニスコート')">テニスコート</a>
   <a class="label cafeteria" onclick="showLostItems('食堂')">食堂</a>
@@ -168,6 +202,16 @@ function displayLostItems(items, place){
   container.innerHTML = html;
 }
 </script>
+
+<!-- ====== Googleフォームボタン ====== -->
+<section class="form-links">
+  <a class="form-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeWvasKCmLWIpXL90R2ojUaObKzzDKyMWmh2rSF4fV0exR4Hg/viewform?usp=header" target="_blank">
+    ✏️ 忘れ物登録フォーム
+  </a>
+  <a class="form-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfqtdVH8mPBXBWLr6dQkDJNtevyu9JZRHdj2-Scr4o28lZMcQ/viewform?usp=publish-editor" target="_blank">
+    ✅ 回収済みフォーム
+  </a>
+</section>
 
 </body>
 </html>
